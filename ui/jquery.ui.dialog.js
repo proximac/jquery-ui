@@ -51,6 +51,7 @@ $.widget("ui.dialog", {
 		minHeight: 150,
 		minWidth: 150,
 		modal: false,
+		takeFocus: true,
 		position: {
 			my: "center",
 			at: "center",
@@ -312,17 +313,19 @@ $.widget("ui.dialog", {
 			});
 		}
 
-		// set focus to the first tabbable element in the content area or the first button
+		// if specified, set focus to the first tabbable element in the content area or the first button
 		// if there are no tabbable elements, set focus on the dialog itself
-		var hasFocus = self.element.find( ":tabbable" );
-		if ( !hasFocus.length ) {
-			hasFocus = uiDialog.find( ".ui-dialog-buttonpane :tabbable" );
+		// otherwise leave focus intact
+		if(options.takeFocus){
+			var hasFocus = self.element.find( ":tabbable" );
 			if ( !hasFocus.length ) {
-				hasFocus = uiDialog;
+				hasFocus = uiDialog.find( ".ui-dialog-buttonpane :tabbable" );
+				if ( !hasFocus.length ) {
+					hasFocus = uiDialog;
+				}
 			}
+			hasFocus.eq( 0 ).focus();
 		}
-		hasFocus.eq( 0 ).focus();
-
 		self._isOpen = true;
 		self._trigger( "open" );
 
